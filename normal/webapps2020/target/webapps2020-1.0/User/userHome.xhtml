@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Home</title>
+    </h:head>
+    <h:body>
+        <h:panelGrid columns="2">
+            Welcome: <h:outputLabel value="#{userBean.username}"/>
+            Balance: <h:outputLabel value="#{userBean.funds}"/>
+            Currency: <h:outputLabel value="#{userBean.currency}"/>
+        </h:panelGrid>
+        <h:panelGrid columns="3">
+            <h:button value="Make a payment" outcome="makePayment"/>
+            <h:button value="Request a payment" outcome="requestPayment"/>
+            <h:form>
+                <h:commandButton value="Logout" action="#{logoutBean.logout()}"/>
+            </h:form>
+        </h:panelGrid>
+        <h:panelGrid columns="4">
+            <h:panelGrid columns="1">
+                <h:outputLabel value="Outbound Payments"/>
+                <h:dataTable value = "#{userBean.outboundTransactions}" var = "transaction">
+                    <h:column>
+                       <f:facet name = "header">To</f:facet>
+                       #{transaction.to.username}
+                    </h:column>
+                    <h:column>
+                       <f:facet name = "header">Amount</f:facet>
+                       #{transaction.fromAmount}
+                    </h:column>
+                </h:dataTable>
+            </h:panelGrid>
+            <h:panelGrid columns="1">
+                <h:outputLabel value="Inbound Payments"/>
+                <h:dataTable value = "#{userBean.inboundTransactions}" var = "transaction">
+                    <h:column>
+                       <f:facet name = "header">From</f:facet>
+                       #{transaction.from.username}
+                    </h:column>
+                    <h:column>
+                       <f:facet name = "header">Amount</f:facet>
+                       #{transaction.toAmount}
+                    </h:column>
+                </h:dataTable>
+            </h:panelGrid>
+            <h:panelGrid columns="1">
+                <h:outputLabel value="Outbound Requests"/>
+                <h:dataTable value = "#{userBean.outboundRequests}" var = "req">
+                    <h:column>
+                       <f:facet name = "header">To</f:facet>
+                       #{req.to.username}
+                    </h:column>
+                    <h:column>
+                       <f:facet name = "header">Amount</f:facet>
+                       #{req.fromAmount}
+                    </h:column>
+                    <h:column>
+                       <f:facet name = "header">Status</f:facet>
+                       <h:form rendered="#{req.declined}">Declined</h:form>
+                       <h:form rendered="#{not req.accepted and not req.declined}">Not Paid</h:form>
+                       <h:form rendered="#{req.accepted}">Paid</h:form>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGrid>
+            <h:panelGrid columns="1">
+                <h:outputLabel value="Inbound Requests"/>
+                <h:dataTable value = "#{userBean.inboundRequests}" var = "req">
+                    <h:column>
+                       <f:facet name = "header">From</f:facet>
+                       #{req.from.username}
+                    </h:column>
+                    <h:column>
+                       <f:facet name = "header">Amount</f:facet>
+                       #{req.toAmount}
+                    </h:column>
+                    <h:column>
+                        <f:facet name = "header">Status</f:facet>
+                        <h:form rendered="#{not req.declined and not req.accepted}">
+                            <h:commandButton value="Decline" action="#{userBean.declineRequest}">
+                                 <f:setPropertyActionListener target="#{userBean.transID}" value="#{req.id}" />
+                            </h:commandButton>
+                            <h:form rendered="#{userBean.funds ge req.toAmount}">
+                                 <h:commandButton value="Pay" action="#{userBean.acceptRequest}">
+                                     <f:setPropertyActionListener target="#{userBean.transID}" value="#{req.id}" />
+                                 </h:commandButton>
+                            </h:form>
+                            <h:form rendered="#{userBean.funds lt req.toAmount}">Payment Unavailable - Insufficient funds</h:form>
+                        </h:form>
+                        <h:form rendered="#{req.accepted}">Paid</h:form>
+                        <h:form rendered="#{req.declined}">Declined</h:form>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGrid>
+        </h:panelGrid>
+    </h:body>
+</html>
+

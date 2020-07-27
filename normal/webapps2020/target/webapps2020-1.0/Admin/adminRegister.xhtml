@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head> 
+        <title>Register Admin</title>
+    </h:head>
+    <h:body>
+        <h:form id="register" title="Register" >
+            <h:panelGrid columns="2">
+                <h:outputLabel for="username" value="Username:"/>
+                <h:panelGrid columns="1">
+                    <h:inputText id="username" required="true" requiredMessage="Please enter a username" value="#{adminRegistrationBean.username}"/>
+                    <h:outputLabel for="error" value="#{adminRegistrationBean.error}" />
+                </h:panelGrid>
+                <h:outputLabel for="password" value="Password:"/>
+                <h:inputSecret id="password" required="true" requiredMessage="Please enter a password" redisplay="false" value="#{adminRegistrationBean.password}"/>
+                <h:commandButton id="submit_form" type="submit" value="Register" action="#{adminRegistrationBean.register}"/>
+                <h:commandButton id="reset_form" type="reset" value="Clear"/>
+            </h:panelGrid>
+        </h:form>
+    </h:body> 
+</html>
